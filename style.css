@@ -1,0 +1,553 @@
+/* ===========================================================
+   Refined, spacious, and optimistic resume
+   File: style.css (Part 1 of 3 CSS parts) — Theme + Base + Header + Buttons
+   Headings: Plus Jakarta Sans, Body: Inter
+   =========================================================== */
+
+/* ----------------------------
+   0) Design Tokens (Theme)
+----------------------------- */
+:root{
+    /* Brand palette */
+    --primary:#1E40AF;      /* indigo (calm, trustworthy) */
+    --primary-600:#1D4ED8;  /* brighter indigo for accents */
+    --accent:#0EA5E9;       /* sky blue (fresh, hopeful) */
+    --accent-2:#22D3EE;     /* cyan for lively edges */
+  
+    /* Text & Surfaces */
+    --ink:#0F172A;          /* main text */
+    --muted:#64748B;        /* secondary text */
+    --bg:#F8FAFC;           /* page background */
+    --card:#FFFFFF;         /* card background */
+    --card-b:#E6EEF6;       /* subtle borders */
+  
+    /* Shadows & radii */
+    --shadow-sm: 0 4px 16px rgba(15,23,42,.06);
+    --shadow-md: 0 10px 28px rgba(15,23,42,.08), 0 4px 12px rgba(15,23,42,.06);
+    --shadow-lg: 0 16px 48px rgba(15,23,42,.12), 0 6px 18px rgba(15,23,42,.08);
+    --radius-8: 8px;
+    --radius-12: 12px;
+    --radius-14: 14px;
+    --radius-16: 16px;
+    --radius-18: 18px;
+  
+    /* Rings / gradients */
+    --ring: conic-gradient(from 180deg, rgba(96,165,250,.0), rgba(96,165,250,.25), rgba(34,211,238,.0));
+    --btn-grad: linear-gradient(135deg, var(--primary), var(--accent));
+    --btn-grad-alt: linear-gradient(135deg, #2563EB, #22D3EE);
+  
+    /* Typographic scale (fluid, airy) */
+    --step--1: clamp(.82rem, .79rem + .1vw, .9rem);
+    --step-0: clamp(1rem, .98rem + .2vw, 1.08rem);
+    --step-1: clamp(1.05rem, 1rem + .5vw, 1.2rem);
+    --step-2: clamp(1.2rem, 1.1rem + .8vw, 1.5rem);
+    --step-3: clamp(1.6rem, 1.4rem + 1.2vw, 2rem);
+    --step-4: clamp(2rem, 1.6rem + 2vw, 3.1rem);
+  
+    /* Spacing scale for airy layout */
+    --space-1: clamp(.35rem, .3rem + .2vw, .5rem);
+    --space-2: clamp(.6rem, .55rem + .3vw, .9rem);
+    --space-3: clamp(.9rem, .8rem + .6vw, 1.3rem);
+    --space-4: clamp(1.2rem, 1.05rem + .9vw, 1.8rem);
+    --space-5: clamp(1.8rem, 1.6rem + 1.3vw, 2.4rem);
+    --space-6: clamp(2.4rem, 2rem + 2vw, 3.2rem);
+  
+    color-scheme: light;
+  }
+  
+  /* ----------------------------
+     1) Base / Reset
+  ----------------------------- */
+  *,
+  *::before,
+  *::after{ box-sizing: border-box }
+  
+  html{ scroll-behavior:smooth; text-size-adjust:100% }
+  
+  body{
+    margin:0;
+    color:var(--ink);
+    background:var(--bg);
+    font: 400 var(--step-0)/1.75 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  img{ max-width:100%; height:auto; display:block }
+  svg{ display:block }
+  a{ color:inherit; text-decoration:none }
+  p{ margin: var(--space-2) 0 var(--space-3) }
+  
+  h1,h2,h3{
+    font-family:'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    line-height:1.25; margin:0 0 var(--space-2) 0;
+  }
+  h1{ font-size: var(--step-4) }
+  h2{ font-size: var(--step-3) }
+  h3{ font-size: var(--step-1) }
+  
+  ::selection{ background:#DBEAFE; color:#0F172A }
+  
+  /* Containers and helpers */
+  .container{ width:min(1100px, 92%); margin-inline:auto }
+  .container.wide{ width:min(1280px,94%) }
+  .center{ text-align:center }
+  .flow > * + *{ margin-top: var(--space-3) } /* vertical rhythm */
+  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0 }
+  
+  /* Skip link */
+  .skip-link{
+    position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;
+  }
+  .skip-link:focus{
+    left:16px; top:12px; width:auto; height:auto; background:#fff; color:var(--ink);
+    padding:.55rem .8rem; border-radius:12px; box-shadow:var(--shadow-md); z-index:999;
+  }
+  
+  /* Focus styles */
+  :focus-visible{
+    outline:3px solid #93C5FD; outline-offset:2px; border-radius:12px;
+  }
+  
+  /* Nice scrollbars (supported browsers only) */
+  *{ scrollbar-width:thin; scrollbar-color:#CBD5E1 transparent }
+  ::-webkit-scrollbar{ height:12px; width:12px }
+  ::-webkit-scrollbar-thumb{
+    background: linear-gradient(180deg, #D1E5FF, #EAF6FF);
+    border-radius:999px; border:3px solid transparent; background-clip:content-box;
+  }
+  
+  /* ----------------------------
+     2) Header + Navigation
+  ----------------------------- */
+  .site-header{
+    position:sticky; top:0; z-index:30;
+    backdrop-filter:saturate(170%) blur(8px);
+    background: rgba(255,255,255,.78);
+    border-bottom:1px solid #EEF2F7;
+    transition: box-shadow .2s ease, background .2s ease;
+  }
+  .site-header.scrolled{ box-shadow: 0 6px 20px rgba(15,23,42,.06); background: rgba(255,255,255,.86) }
+  
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding: .9rem 0 }
+  .logo{
+    font-weight:800; letter-spacing:.6px; font-size:1.1rem;
+    background: linear-gradient(45deg, var(--primary-600), var(--accent));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  
+  .nav-links{
+    display:flex; align-items:center; gap:1rem; list-style:none; margin:0; padding:0;
+  }
+  .nav-links a{
+    padding:.5rem .75rem; border-radius:12px; font-weight:600; color:#0B2447;
+  }
+  .nav-links a:hover{ background:#fff; box-shadow: var(--shadow-sm) }
+  
+  .nav-link.active{
+    color:var(--primary);
+    background: rgba(30,64,175,.08);
+  }
+  
+  .nav-toggle{
+    display:none; background:none; border:none; font-size:1.4rem; line-height:1;
+    padding:.3rem .5rem; border-radius:10px;
+  }
+  .nav-toggle:hover{ background:#F1F5F9 }
+  
+  /* Scroll progress bar (top) */
+  .scroll-progress{
+    position:absolute; left:0; top:0; height:3px; width:100%;
+    background: linear-gradient(90deg, #60A5FA, #A78BFA 50%, #22D3EE);
+    transform-origin:left; transform: scaleX(0); opacity:.85;
+  }
+  
+  /* Mobile menu (will be toggled via JS) */
+  .nav-links.open{
+    display:flex; flex-direction:column; gap:.2rem;
+    position:absolute; right:4%; top:64px; padding:.6rem;
+    background:#fff; border:1px solid var(--card-b); border-radius:14px;
+    box-shadow: var(--shadow-lg);
+    min-width: 180px;
+  }
+  .nav-links.open a{ width:100%; }
+  
+  /* ----------------------------
+     3) Buttons
+  ----------------------------- */
+  .btn{
+    display:inline-block; border:1px solid transparent; border-radius:12px;
+    padding:.78rem 1.1rem; font-weight:700; letter-spacing:.2px;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+    box-shadow: var(--shadow-md);
+    will-change: transform;
+  }
+  .btn.small{ padding:.5rem .85rem; border-radius:10px }
+  .btn:active{ transform: translateY(0) scale(.99) }
+  
+  .btn.cta{
+    background: var(--btn-grad); color:#fff;
+    position:relative; overflow:hidden;
+  }
+  .btn.cta::after{
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+    transform: translateX(-120%); transition: transform .6s ease;
+  }
+  .btn.cta:hover{ transform: translateY(-2px) }
+  .btn.cta:hover::after{ transform: translateX(120%) }
+  
+  .btn.ghost{
+    background:#FFFFFF; border:1px solid var(--card-b); color:#0B2447;
+  }
+  .btn.ghost:hover{ background:#F9FBFF }
+  
+  /* Utility pill badges */
+  .badge{
+    display:inline-block; font-size:.78rem; font-weight:700; padding:.3rem .6rem;
+    border-radius:999px; color:#0b2447; background: rgba(30,64,175,.12);
+  }
+  .badge.alt{ background: rgba(14,165,233,.12) }
+  
+  /* ----------------------------
+     4) Hero (structure only — visuals in Part 3)
+  ----------------------------- */
+  .hero{
+    position:relative; min-height:68vh; display:grid; place-items:center; text-align:center;
+    isolation:isolate;
+  }
+  .hero-inner{ position:relative; z-index:1; padding-block: var(--space-6) }
+  .hero-title{
+    font-size: var(--step-4); color:#fff; letter-spacing:.2px;
+    text-shadow:0 1px 12px rgba(0,0,0,.18); margin-bottom: .35rem;
+  }
+  .subtitle{ color:#E6EEF6; font-weight:600; margin-bottom:.2rem }
+  .tagline{ color:#F3F6FA; max-width: 60ch; margin-inline:auto }
+  .dob{ color:#E6EEF6; margin-top:.9rem }
+  .hero-cta{ display:flex; gap:.8rem; justify-content:center; align-items:center; margin-top:.8rem; flex-wrap:wrap }
+  
+  /* Scroll hint */
+  .scroll-hint{
+    display:inline-flex; align-items:center; gap:.35rem; color:#E6EEF6; margin-top:1.1rem;
+    font-weight:700; text-transform:uppercase; letter-spacing:.12em; opacity:.95;
+  }
+  .scroll-hint .arrow{ display:inline-block; animation: bob 1.6s ease-in-out infinite }
+  @keyframes bob{ 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(4px) } }
+  
+  /* Hero background wrapper */
+  .hero-bg{ position:absolute; inset:0; z-index:-2; overflow:hidden }
+  .hero-bg img{
+    width:100%; height:100%; object-fit:cover;
+    filter:saturate(106%) contrast(98%) brightness(98%);
+  }
+  
+  /* Decorative optimistic shapes (visuals in Part 3) */
+  .shape{ position:absolute; border-radius:50%; filter: blur(28px); opacity:.5; pointer-events:none }
+  .shape.s1{ width:38vmax; height:38vmax; top:-12vmax; left:-8vmax; }
+  .shape.s2{ width:28vmax; height:28vmax; right:-10vmax; top:-6vmax; }
+  .shape.s3{ width:24vmax; height:24vmax; left:50%; bottom:-10vmax; transform: translateX(-50%); }
+  
+  /* ----------------------------
+     5) Sections (structure only — visuals in Part 3)
+  ----------------------------- */
+  .section{ padding: var(--space-6) 0; position:relative }
+  .section:before{
+    content:""; position:absolute; left:0; right:0; top:-1px; height:1px;
+    background: linear-gradient(90deg, rgba(30,64,175,.15), rgba(14,165,233,.15));
+    opacity:.35;
+  }
+  .section-alt{ background:#F3F6FB }
+  
+  /* Card shell */
+  .card{
+    background: var(--card);
+    border:1px solid var(--card-b);
+    border-radius: var(--radius-16);
+    padding: clamp(1rem, .9rem + 1vw, 1.5rem);
+    box-shadow: var(--shadow-md);
+    position:relative; overflow:hidden;
+  }
+  
+  /* Grid for About */
+  .grid-2{
+    display:grid; grid-template-columns: .9fr 1.1fr; gap: clamp(1rem, .8rem + 1vw, 1.6rem);
+    align-items:center;
+  }
+  
+  /* Avatar ring */
+  .avatar{
+    width:min(210px, 62vw); aspect-ratio:1/1; border-radius:50%;
+    overflow:hidden; border:4px solid #fff; box-shadow: var(--shadow-md);
+    margin:auto;
+  }
+  .avatar img{ width:100%; height:100%; object-fit:cover; }
+  .avatar.ring{ position:relative }
+  .avatar.ring::after{
+    content:""; position:absolute; inset:-1px; border-radius:50%;
+    background: var(--ring); opacity:.7; mask: radial-gradient(circle, transparent 61%, black 62%);
+  }
+  
+  /* Tick list */
+  .ticks{ list-style:none; padding:0; margin: var(--space-2) 0 0 }
+  .ticks li{
+    position:relative; padding-left:1.6rem; color:var(--ink);
+  }
+  .ticks li + li{ margin-top:.45rem }
+  .ticks li::before{
+    content:""; position:absolute; left:0; top:.35rem; width:1rem; height:1rem; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, #fff 0 35%, #fff 36% 36%), var(--btn-grad-alt);
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  }
+  
+  /* Placeholders for visuals in Part 3 */
+  .hero-overlay{ position:absolute; inset:0; z-index:-1; }
+
+/* ===========================================================
+   style.css (Part 2 of 3 CSS parts)
+   Visuals: Hero overlay, optimistic shapes, cards polish,
+   timeline, languages, contact, footer, helpers
+   =========================================================== */
+
+/* 6) Hero — visual layers for hope and openness */
+.hero-overlay{
+    /* Layered glow: subtle darken + color tints for optimistic tone */
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,.22), rgba(0,0,0,.28)),
+      radial-gradient(1200px 420px at 10% -10%, rgba(30,64,175,.28), rgba(255,255,255,0) 60%),
+      radial-gradient(1000px 700px at 110% 0%, rgba(14,165,233,.20), rgba(255,255,255,0) 55%),
+      radial-gradient(1200px 700px at 50% 130%, rgba(34,211,238,.22), rgba(255,255,255,0) 55%);
+    mix-blend-mode: normal;
+  }
+  
+  /* Optimistic soft blobs drifting slowly */
+  .shape{
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,255,255,0) 55%),
+                radial-gradient(circle at 70% 70%, rgba(255,255,255,.65), rgba(255,255,255,0) 55%);
+    opacity:.45;
+  }
+  .shape.s1{ background:
+    radial-gradient(circle at 30% 30%, rgba(96,165,250,.9), rgba(96,165,250,0) 60%),
+    radial-gradient(circle at 70% 70%, rgba(125,211,252,.6), rgba(125,211,252,0) 55%);
+    animation: drift1 24s ease-in-out infinite alternate;
+  }
+  .shape.s2{ background:
+    radial-gradient(circle at 30% 30%, rgba(14,165,233,.8), rgba(14,165,233,0) 60%),
+    radial-gradient(circle at 70% 70%, rgba(34,211,238,.55), rgba(34,211,238,0) 55%);
+    animation: drift2 28s ease-in-out infinite alternate;
+  }
+  .shape.s3{ background:
+    radial-gradient(circle at 40% 35%, rgba(59,130,246,.7), rgba(59,130,246,0) 60%),
+    radial-gradient(circle at 70% 70%, rgba(99,102,241,.5), rgba(99,102,241,0) 55%);
+    animation: drift3 26s ease-in-out infinite alternate;
+  }
+  
+  @keyframes drift1{ 0%{ transform:translate(0,0) scale(1)} 100%{ transform:translate(2rem,-1rem) scale(1.05)} }
+  @keyframes drift2{ 0%{ transform:translate(0,0) scale(1)} 100%{ transform:translate(-2rem,1rem) scale(1.04)} }
+  @keyframes drift3{ 0%{ transform:translate(-1rem,0) scale(1)} 100%{ transform:translate(1rem,1rem) scale(1.03)} }
+  
+  /* 7) Cards — subtle ring on hover to feel lively yet calm */
+  .card::before{
+    content:""; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none;
+    background: conic-gradient(from 180deg, rgba(96,165,250,.0), rgba(96,165,250,.22), rgba(34,211,238,.18), rgba(96,165,250,.0));
+    mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+    -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    padding:1px; opacity:0; transition:.35s ease;
+  }
+  .card:hover::before{ opacity:.75 }
+  
+  /* 8) Education timeline — clean, elegant */
+  .edu-timeline{ position:relative; padding-left:1.25rem; margin-top:.2rem }
+  .edu-timeline::before{
+    content:""; position:absolute; left:.5rem; top:.25rem; bottom:.25rem; width:2px;
+    background: linear-gradient(180deg, rgba(30,64,175,.35), rgba(14,165,233,.35));
+    border-radius:2px;
+  }
+  .edu-item{ position:relative; padding-left:1rem; margin: .7rem 0 }
+  .edu-dot{
+    position:absolute; left:-.1rem; top:.45rem; width:12px; height:12px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, #fff 0 35%, #fff 36% 36%), conic-gradient(#60A5FA, #22D3EE, #60A5FA);
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  }
+  .edu-content h3{ margin:0 0 .2rem 0; font-size: var(--step-2); color: var(--ink) }
+  .edu-meta{ color:var(--muted); margin:.1rem 0 .5rem; font-size: var(--step--1) }
+  .edu-item:hover .edu-content{ transform: translateX(.5px) }
+  .edu-content{ transition: transform .2s ease }
+  
+  /* 9) Languages — raised tiles with gentle hover */
+  .lang-columns{
+    display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(.8rem, .6rem + 1vw, 1.1rem);
+  }
+  .lang-col{
+    background:#fff; border:1px solid var(--card-b); border-radius:14px; padding: clamp(.9rem, .8rem + .5vw, 1.2rem);
+    text-align:center; box-shadow: var(--shadow-md); position:relative; overflow:hidden; transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .lang-col h3{ color: var(--primary-600); margin-bottom:.25rem; font-size: var(--step-1) }
+  .lang-col p{ color: var(--muted); margin:0 }
+  .lang-col::after{
+    content:""; position:absolute; inset: -1px; border-radius:inherit; pointer-events:none; opacity:0; transition:.25s ease;
+    background: conic-gradient(from 90deg, rgba(96,165,250,.0), rgba(96,165,250,.2), rgba(34,211,238,.0));
+    mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000); -webkit-mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+    -webkit-mask-composite:xor; mask-composite: exclude; padding:1px;
+  }
+  .lang-col:hover{ transform: translateY(-3px); box-shadow: var(--shadow-lg) }
+  .lang-col:hover::after{ opacity:.8 }
+  
+  /* 10) Contact — roomy card with gentle highlight */
+  .contact-card{
+    display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-top:.9rem;
+    background:#fff; border:1px solid var(--card-b); border-radius:16px; padding: clamp(1rem, .9rem + 1vw, 1.4rem);
+    box-shadow: var(--shadow-md);
+  }
+  .contact-item{
+    display:flex; align-items:center; gap:.9rem; padding:.8rem .6rem; border-radius:12px; transition:.22s ease; border:1px solid transparent;
+  }
+  .contact-item:hover{
+    background:#F8FBFF; border-color:#E2ECF7; box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+  }
+  .contact-item h3{ margin:0; font-size: var(--step-1); color: var(--ink) }
+  .contact-item p{ margin:.1rem 0 0; color: var(--muted) }
+  .icon{ font-size:1.4rem }
+  
+  /* Copy tip */
+  .copy-tip{
+    text-align:center; color:#0b2447; font-weight:700; opacity:0; transform: translateY(6px);
+    transition:.25s ease; margin-top:.6rem;
+  }
+  .copy-tip.show{ opacity:1; transform: translateY(0) }
+  
+  /* 11) Footer — calm and stable */
+  .footer{
+    background:#0F172A; color:#E6EEF6; margin-top: var(--space-6);
+    padding: clamp(1.2rem, 1rem + .6vw, 1.8rem) 0;
+  }
+  .footer-inner{
+    display:flex; align-items:center; justify-content:center; gap:1rem; position:relative;
+  }
+  .footer .to-top{
+    position:absolute; right:0; transform: translateY(-2px);
+    display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px;
+    border-radius:10px; background: linear-gradient(135deg, #334155, #1F2937); color:#E6EEF6;
+    box-shadow: 0 6px 14px rgba(0,0,0,.25); font-weight:800;
+  }
+  .footer .to-top:hover{ background: linear-gradient(135deg, #475569, #1F2937) }
+  
+  /* 12) Ambient gradients for section edges (breathing space feeling) */
+  .section::after{
+    content:""; position:absolute; left:50%; transform:translateX(-50%); bottom:-2px; width:min(1100px,92%); height:2px;
+    background: linear-gradient(90deg, rgba(203,213,225,0), rgba(14,165,233,.25), rgba(203,213,225,0));
+    opacity:.7; border-radius:999px;
+  }
+  
+  /* 13) Utilities for large whitespace feeling */
+  .pad-xl{ padding-block: calc(var(--space-6) + 1rem) }
+  .gap-xl{ gap: calc(var(--space-4) + .6rem) }
+  
+  /* 14) Print styles (basic) */
+  @media print{
+    .site-header, .hero, .scroll-hint, .to-top{ display:none !important }
+    body{ background:#fff }
+    .section, .card{ box-shadow:none; border-color:#DDE6EE }
+    a{ color:#1D4ED8; text-decoration:underline }
+  }
+
+/* ===========================================================
+   style.css (Part 3 of 3 CSS parts)
+   Responsive layout, reduced-motion, micro-tweaks
+   =========================================================== */
+
+/* 15) Responsive — generous whitespace with clean stacking */
+
+/* Large tablets / small laptops */
+@media (max-width: 1200px){
+    .container{ width:min(1100px, 94%) }
+    .hero-title{ letter-spacing:.15px }
+    .grid-2{ grid-template-columns: .95fr 1.05fr }
+  }
+  
+  /* Tablets */
+  @media (max-width: 1024px){
+    .hero{ min-height:64vh }
+    .hero-inner{ padding-block: calc(var(--space-6) - .4rem) }
+    .tagline{ max-width: 65ch }
+    .grid-2{ grid-template-columns: 1fr 1fr }
+    .avatar{ width:min(200px, 58vw) }
+    .lang-columns{ grid-template-columns: repeat(2, minmax(0,1fr)) }
+  }
+  
+  /* Mobile navigation breakpoint */
+  @media (max-width: 900px){
+    .nav-toggle{ display:block }
+    .nav-links{ display:none }
+    .nav-links.open{
+      display:flex; flex-direction:column; right:4%; top:64px; min-width:200px;
+    }
+  
+    .hero{ min-height:60vh }
+    .hero-title{ font-size: clamp(1.9rem, 5.2vw, 2.5rem) }
+    .subtitle{ font-size: var(--step-0) }
+    .tagline{ max-width: 56ch }
+    .grid-2{ grid-template-columns: 1fr; text-align:center }
+    .copy{ max-width: 62ch; margin-inline:auto }
+    .lang-columns{ grid-template-columns: 1fr }
+    .contact-card{ grid-template-columns: 1fr }
+    .footer .to-top{ position:static }
+  }
+  
+  /* Small phones */
+  @media (max-width: 600px){
+    .logo{ font-size: 1rem }
+    .nav{ padding:.75rem 0 }
+    .container{ width:min(1100px, 94%) }
+    .hero-cta{ gap:.6rem }
+    .btn{ padding:.7rem 1rem }
+    .avatar{ width:min(180px, 65vw) }
+    .lang-col{ padding: 1rem }
+    .section{ padding: calc(var(--space-5)) 0 }
+    .contact-item{ padding:.7rem .5rem }
+  }
+  
+  /* Extra small */
+  @media (max-width: 480px){
+    .hero-title{ font-size: clamp(1.8rem, 7vw, 2.2rem) }
+    .subtitle{ font-weight:600 }
+    .tagline{ max-width: 48ch }
+    .scroll-hint{ font-size:.8rem; letter-spacing:.1em }
+    .avatar{ width:min(160px, 68vw) }
+    .ticks li{ padding-left:1.4rem }
+    .ticks li::before{ width:.9rem; height:.9rem; top:.32rem }
+  }
+  
+  /* 16) Reduced Motion — respectful defaults */
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto }
+    .reveal{ opacity:1; transform:none }
+    .scroll-hint .arrow{ animation:none }
+    .shape{ animation:none }
+    .btn:hover{ transform:none }
+  }
+  
+  /* 17) High-contrast fallback (manual class) */
+  .hc .nav-links a{ color:#0F172A }
+  .hc .btn.cta{ background:#1D4ED8 }
+  .hc .hero-overlay{
+    background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.35));
+  }
+  
+  /* 18) Touch-target sizing tweaks */
+  @media (pointer: coarse){
+    .nav-links a, .btn, .contact-item{ min-height:44px }
+  }
+  
+  /* 19) Fine-tune optimistic blobs on small screens */
+  @media (max-width: 900px){
+    .shape{ filter: blur(22px); opacity:.42 }
+    .shape.s1{ width:60vmin; height:60vmin; top:-20vmin; left:-14vmin }
+    .shape.s2{ width:52vmin; height:52vmin; right:-18vmin; top:-10vmin }
+    .shape.s3{ width:50vmin; height:50vmin; bottom:-24vmin }
+  }
+  
+  /* 20) No-JS fallback essentials */
+  noscript .reveal{ opacity:1; transform:none }
+  noscript .nav-links{ display:flex !important }
