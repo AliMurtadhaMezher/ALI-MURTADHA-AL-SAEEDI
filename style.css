@@ -294,7 +294,7 @@ h3{ font-size: var(--step-1) }
 }
 .ticks li + li{ margin-top:.45rem }
 .ticks li::before{
-  content:""; position:absolute; left:0; top:.35rem; width:1rem; height:1rem; border-radius:50%;
+  
   background: radial-gradient(circle at 30% 30%, #fff 0 35%, #fff 36% 36%), var(--btn-grad-alt);
   box-shadow: 0 2px 6px rgba(0,0,0,.08);
 }
@@ -583,5 +583,6 @@ noscript .nav-links{ display:flex !important }
 @media (max-width: 480px){
   .avatar{ width: min(240px, 88vw) }
 }
+
 
 
